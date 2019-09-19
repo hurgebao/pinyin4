@@ -11,7 +11,7 @@
 	<groupId>com.sinoteif</groupId>
 	<artifactId>py</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pinyin4</name>
+	<name>pinyin4j</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
