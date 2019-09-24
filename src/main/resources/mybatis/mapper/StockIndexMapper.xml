@@ -13,10 +13,10 @@
 	select * from stock_index ;
   </select>
 	<select id="selectStockByPrefix"  resultType="java.util.Map">
-		select stock_code,stock_name from stock_index where stock_name_first_letter like concat(#{stockPreLetter},'%') order by stock_code asc limit 8;
+		select stock_code,stock_name,stock_name_first_letter from stock_index where stock_name_first_letter like concat(#{stockPreLetter},'%') order by stock_code asc limit 8;
 	</select>
 	<select id="selectStockByStockCode"   resultType="java.util.Map">
-		select stock_code,stock_name from stock_index where stock_code like concat(#{stockCode},'%')  order by stock_code asc  limit 8;
+		select stock_code,stock_name,stock_name_first_letter from stock_index where stock_code like concat(#{stockCode},'%')  order by stock_code asc  limit 8;
 	</select>
 	<insert id="insertSelective" parameterType="com.sinoteif.py.vo.StockIndex">
 		insert into stock_index
