@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>股票首字母模糊搜索股票</title>
+    <script type="text/javascript" src="/jquery-easyui-1.5.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function showStockInfo(){
+            var stocknameEL=$("#stocknameEL").val();
+            $("#stockList").html("");
+          if(stocknameEL !=null && stocknameEL.length>0){
+                $.ajax({
+                    type : 'GET',
+                    async : true,
+                    url: '/stockIndex/'+stocknameEL,
+                    success: function(data) {
+                        var pnode="";
+                        for(var i=0;i<data.length;i++){
+                           pnode+= ("<p>" +data[i].stock_code + "(" + data[i].stock_name +")</p>" );
+                        }
+                        $("#stockList").html(pnode);
+
+                    },
+                    error: function (message) {
+                        alert("后台异常:"+message);
+                    }
+                });
+            }
+        }
+
+    </script>
+</head>
+<body>
+<table>
+    <tr><td>股票首字母:</td><td><input name="stocknameEL" id="stocknameEL" onkeyup="showStockInfo()"/></td></tr>
+    <tr><td></td><td id="stockList">
+    </td></tr>
+
+</table>
+</body>
+</html>

@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2019/9/23.
@@ -50,7 +51,7 @@ public class StockIndexMapperTest {
     }
     @Test
     public void testSelectStockByPrefix(){
-        List<StockIndex> list=stockIndexMapper.selectStockByPrefix("W");
+        List<Map<String,String>> list=stockIndexMapper.selectStockByPrefix("W");
         System.out.println("selectStockByPrefix"+JSON.toJSONString(list));
     }
 }

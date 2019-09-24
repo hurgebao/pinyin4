@@ -15,18 +15,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by admin on 2019/9/23.
  */
 @RestController
-public class RedisController {
+public class StockIndexController {
     public static final Map<String,String> STOCK_EXCHANGE;
-    private static Logger logger= LoggerFactory.getLogger(RedisController.class);
+    private static Logger logger= LoggerFactory.getLogger(StockIndexController.class);
+    private static final Pattern NUM_PATTERN=Pattern.compile("[0-9]{0,6}");
+    private static final Pattern CHAR_PATTERN=Pattern.compile("[a-z]+|[A-Z]+");
+
     static {
         STOCK_EXCHANGE = new HashMap<String,String>();
         STOCK_EXCHANGE.put("600", "sh");
@@ -44,9 +46,21 @@ public class RedisController {
     private StockIndexMapper stockIndexMapper;
 
     @GetMapping("/stockIndex/{stockPreLetter}")
-    public List<StockIndex> l2(@PathVariable("stockPreLetter") String stockPreLetter){
+    public List<Map<String,String>> l2(@PathVariable("stockPreLetter") String stockPreLetter){
         logger.info("stockPreLetter=" + stockPreLetter);
-        List<StockIndex> list= stockIndexMapper.selectStockByPrefix(stockPreLetter);
+        Matcher numMatcher=NUM_PATTERN.matcher(stockPreLetter);
+        Matcher charMatcher=CHAR_PATTERN.matcher(stockPreLetter);
+
+        if(!numMatcher.find() && !charMatcher.find()){
+            return new ArrayList<Map<String,String>>();
+        }
+        List<Map<String,String>> list=null;
+        if(numMatcher.find()){
+            list= stockIndexMapper.selectStockByStockCode(stockPreLetter);
+        }
+        if(charMatcher.find()){
+            list= stockIndexMapper.selectStockByPrefix(stockPreLetter);
+        }
         logger.info(JSON.toJSONString(list));
         return list;
     }
