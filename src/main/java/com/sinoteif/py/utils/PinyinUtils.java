@@ -21,7 +21,7 @@ public class PinyinUtils {
      *            汉字
      * @return
      */
-    public static String getAlpha(String chines) {
+    public static String getAlpha(String chines) throws BadHanyuPinyinOutputFormatCombination{
         chines = cleanChar(chines);
         String pinyinName = "";
         char[] nameChar = chines.toCharArray();
@@ -32,8 +32,9 @@ public class PinyinUtils {
             if (nameChar[i] > 128) {
                 try {
                     pinyinName += PinyinHelper.toHanyuPinyinStringArray(nameChar[i], defaultFormat)[0].charAt(0);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                }catch (Exception e){
+//                    e.printStackTrace();
+                    System.out.println(chines+"pinyinName="+pinyinName+","+nameChar[i]+","+PinyinHelper.toHanyuPinyinStringArray(nameChar[i], defaultFormat));
                 }
             } else {
                 pinyinName += nameChar[i];
@@ -115,6 +116,7 @@ public class PinyinUtils {
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(chines);
         chines = matcher.replaceAll("").trim();
+        chines=chines.replaceAll("Ａ","A");
         return chines;
     }
 }

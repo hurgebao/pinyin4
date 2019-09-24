@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sinoteif.py.mapper.StockIndexMapper" >
+	<resultMap type="com.sinoteif.py.vo.StockIndex" id="stockIndexMap">
+		<result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="stock_name_first_letter" property="stockNameFirstLetter" jdbcType="VARCHAR" />
+	    <result column="stock_code" property="stockCode" jdbcType="VARCHAR" />
+	    <result column="stock_name" property="stockName" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+  <select id="selectAllStock" resultMap="stockIndexMap">
+	select * from stock_index ;
+  </select>
+	<select id="selectStockByPrefix"  resultMap="stockIndexMap">
+		select * from stock_index where stock_name_first_letter like concat(#{stockPreLetter},'%');
+	</select>
+	<insert id="insertSelective" parameterType="com.sinoteif.py.vo.StockIndex">
+		insert into stock_index
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="stockNameFirstLetter != null">
+				stock_name_first_letter,
+			</if>
+			<if test="stockCode != null">
+				stock_code,
+			</if>
+			<if test="stockName != null">
+				stock_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="stockNameFirstLetter != null">
+				#{stockNameFirstLetter,jdbcType=VARCHAR},
+			</if>
+			<if test="stockCode != null">
+				#{stockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="stockName != null">
+				#{stockName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.sinoteif.py.vo.StockIndex">
+		update stock_index
+		<set>
+			<if test="stockNameFirstLetter != null">
+				stock_name_first_letter = #{stockNameFirstLetter,jdbcType=VARCHAR},
+			</if>
+			<if test="stockCode != null">
+				stock_code = #{stockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="stockName != null">
+				stock_name = #{stockName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

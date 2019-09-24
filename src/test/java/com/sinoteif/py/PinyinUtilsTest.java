@@ -1,6 +1,7 @@
 package com.sinoteif.py;
 
 import com.sinoteif.py.utils.PinyinUtils;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PinyinUtilsTest {
     @Test
-    public void testgetAlpha(){
+    public void testgetAlpha() throws BadHanyuPinyinOutputFormatCombination {
         String s1 = PinyinUtils.getAlpha("中国石化");
         String s2 = PinyinUtils.getAlpha("多喜爱");
         String s3 = PinyinUtils.getAlpha("万科A");
