@@ -61,7 +61,7 @@ public class StockIndexController {
         if(charMatcher.find()){
             list= stockIndexMapper.selectStockByPrefix(stockPreLetter);
         }
-        logger.info(JSON.toJSONString(list));
+        logger.debug("stockList",JSON.toJSONString(list));
         return list;
     }
     @GetMapping("/stockIndex/initAll")
