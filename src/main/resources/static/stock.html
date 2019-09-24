@@ -20,7 +20,7 @@
                            pnode+= ("<p>" +data[i].stock_code + "(" + data[i].stock_name +")</p>" );
                         }
                         $("#stockList").html(pnode);
-
+                        $("#refreshMsg").html("");
                     },
                     error: function (message) {
                         alert("后台异常:"+message);
@@ -28,11 +28,28 @@
                 });
             }
         }
+        function refreshData(){
+            $("#rbutton").attr("disabled",true);
+            $.ajax({
+                type : 'GET',
+                async : true,
+                url: '/stockIndex/update',
+                success: function(data) {
+                      $("#refreshMsg").html(JSON.stringify(data));
+                      $("#rbutton").attr("disabled",false);
 
+                },
+                error: function (message) {
+                    alert("后台异常:"+message);
+                    $("#rbutton").attr("disabled",false);
+                }
+            });
+        }
     </script>
 </head>
 <body>
 <table>
+    <tr><td><input type="button" value="更新数据" onclick="refreshData()" id="rbutton"/></td><td><span id="refreshMsg"></span></td></tr>
     <tr><td>股票首字母:</td><td><input name="stocknameEL" id="stocknameEL" onkeyup="showStockInfo()"/></td></tr>
     <tr><td></td><td id="stockList">
     </td></tr>

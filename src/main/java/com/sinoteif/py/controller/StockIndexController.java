@@ -29,7 +29,7 @@ public class StockIndexController {
     private static Logger logger= LoggerFactory.getLogger(StockIndexController.class);
     private static final Pattern NUM_PATTERN=Pattern.compile("[0-9]{0,6}");
     private static final Pattern CHAR_PATTERN=Pattern.compile("[a-z]+|[A-Z]+");
-
+    private String inited="0";
     static {
         STOCK_EXCHANGE = new HashMap<String,String>();
         STOCK_EXCHANGE.put("600", "sh");
@@ -62,14 +62,40 @@ public class StockIndexController {
         if(charMatcher.find()){
             list= stockIndexMapper.selectStockByPrefix(stockPreLetter);
         }
-        logger.debug("stockList{}",JSON.toJSONString(list));
+        logger.debug("stockList{}", JSON.toJSONString(list));
         return list;
     }
     @GetMapping("/stockIndex/initAll")
-    public Object initAll() throws BadHanyuPinyinOutputFormatCombination {
+    public Object initAll()  {
+        if("1".equals(inited)){
+            return "stock index is initing,please try again later ";
+        }
+        Integer count= stockIndexMapper.selectTotalNum();
+        if(count>0){
+            logger.info("stock index was inited,please clean and retry again");
+            return "stock index was inited,please clean and retry again";
+        }
+        inited="1";
+        logger.info("begin init stock index --------");
+        Long startTime=System.currentTimeMillis();
+        Integer i=0;
+        try {
+            i= initdb();
+            Long endTime=System.currentTimeMillis();
+            String msg= "init " +i+" records,and cost "+(endTime-startTime)+" ms";
+            logger.info("end init stock index: "+msg);
+            return msg;
+        } catch (Exception e) {
+            logger.error("init exception {}",e);
+            return "init exception "+e.getMessage();
+        }finally {
+            inited="0";
+        }
+    }
+
+    private Integer initdb() throws BadHanyuPinyinOutputFormatCombination {
+        Integer i=0;
         Set<String> set=redisTemplate.keys("*");
-        logger.info("~~~~~~~开始初始股票名称索引数据~~~~~~~");
-        int i=0;
         for(String stockCode:set){
             if(null != stockCode && stockCode.length() == 6) {
                 String stockType = STOCK_EXCHANGE.get(stockCode.substring(0, 3));
@@ -82,7 +108,7 @@ public class StockIndexController {
                 JSONObject jsonObject=  JSON.parseObject(stockInfo.toString());
                 String stock=jsonObject.getString("code");
                 String stockName=jsonObject.getString("chName");
-                String stockNameFL=PinyinUtils.getAlpha2(stockName);
+                String stockNameFL= PinyinUtils.getAlpha2(stockName);
                 String[] names=stockNameFL.split(",");
                 for(String name:names){
                     StockIndex stockIndex=new StockIndex();
@@ -90,11 +116,74 @@ public class StockIndexController {
                     stockIndex.setStockName(stockName);
                     stockIndex.setStockNameFirstLetter(name);
                     stockIndexMapper.insertSelective(stockIndex);
+                    i++;
                 }
 //                System.out.println(stockName+","+stockNameFL);
 
             }
         }
-        return i;
+        return  i;
+    }
+    @GetMapping("/stockIndex/update")
+    public Object update(){
+        if("1".equals(inited)){
+            return "stock index is updating,please try again later ";
+        }
+        inited="1";
+        logger.info("begin update stock index --------");
+        Long startTime=System.currentTimeMillis();
+        try{
+            List<StockIndex> list=stockIndexMapper.selectAllStock();
+            int i=0;
+            if(list.size()<=0){
+                i= this.initdb();
+            }else{
+                Set<String> set=new HashSet<String>();
+                for(StockIndex stockIndex:list){
+                    set.add(stockIndex.getStockCode() + stockIndex.getStockNameFirstLetter());
+                }
+                i= this.updatedb(set);
+            }
+            Long endTime=System.currentTimeMillis();
+            String msg= "update " +i+" records,and cost "+(endTime-startTime)+" ms";
+            logger.info("end update stock index: "+msg);
+            return msg;
+        } catch (Exception e) {
+            logger.error("update exception "+e.getMessage());
+            return "update exception "+e.getMessage();
+        }finally {
+            inited="0";
+        }
+    }
+    private Integer updatedb(Set<String> stockIndexSet) throws BadHanyuPinyinOutputFormatCombination {
+        Integer i=0;
+        Set<String> tmpSet=redisTemplate.keys("*");
+        for(String stockCode:tmpSet){
+            if(null != stockCode && stockCode.length() == 6) {
+                String stockType = STOCK_EXCHANGE.get(stockCode.substring(0, 3));
+                if(null == stockType) {
+                    continue;
+                }
+            }
+            Object stockInfo= redisTemplate.opsForValue().get(stockCode);
+            if (stockInfo!=null){
+                JSONObject jsonObject=  JSON.parseObject(stockInfo.toString());
+                String stock=jsonObject.getString("code");
+                String stockName=jsonObject.getString("chName");
+                String stockNameFL= PinyinUtils.getAlpha2(stockName);
+                String[] names=stockNameFL.split(",");
+                for(String name:names){
+                    StockIndex stockIndex=new StockIndex();
+                    stockIndex.setStockCode(stock);
+                    stockIndex.setStockName(stockName);
+                    stockIndex.setStockNameFirstLetter(name);
+                    if(!stockIndexSet.contains(stock+name)){
+                        stockIndexMapper.insertSelective(stockIndex);
+                        i++;
+                    }
+                }
+            }
+        }
+        return  i;
     }
 }

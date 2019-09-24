@@ -9,6 +9,7 @@ import java.util.Map;
 public interface StockIndexMapper {
 
 	List<StockIndex> selectAllStock();
+	Integer selectTotalNum();
 	int insertSelective(StockIndex stockIndex);
 	int updateByPrimaryKeySelective(StockIndex stockIndex);
 	List<Map<String,String>> selectStockByPrefix(String stockPreLetter);

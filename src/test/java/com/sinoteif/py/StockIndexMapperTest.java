@@ -54,4 +54,9 @@ public class StockIndexMapperTest {
         List<Map<String,String>> list=stockIndexMapper.selectStockByPrefix("W");
         System.out.println("selectStockByPrefix"+JSON.toJSONString(list));
     }
+    @Test
+    public void testselectTotalNum(){
+        int count=stockIndexMapper.selectTotalNum();
+        System.out.println("++++++++++++++count="+count);
+    }
 }
