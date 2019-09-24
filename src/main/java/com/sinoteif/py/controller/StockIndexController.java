@@ -3,6 +3,7 @@ package com.sinoteif.py.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sinoteif.py.mapper.StockIndexMapper;
+import com.sinoteif.py.utils.Pinyin4JUtils;
 import com.sinoteif.py.utils.PinyinUtils;
 import com.sinoteif.py.vo.StockIndex;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
@@ -67,7 +68,7 @@ public class StockIndexController {
     @GetMapping("/stockIndex/initAll")
     public Object initAll() throws BadHanyuPinyinOutputFormatCombination {
         Set<String> set=redisTemplate.keys("*");
-        logger.info("~~~~~~~~~~~~~~");
+        logger.info("~~~~~~~开始初始股票名称索引数据~~~~~~~");
         int i=0;
         for(String stockCode:set){
             if(null != stockCode && stockCode.length() == 6) {
@@ -81,28 +82,17 @@ public class StockIndexController {
                 JSONObject jsonObject=  JSON.parseObject(stockInfo.toString());
                 String stock=jsonObject.getString("code");
                 String stockName=jsonObject.getString("chName");
-                /**
-                 * 多音字版 4551条记录
-                 */
-//                String tmp= Pinyin4JUtils.converterToFirstSpell(stockName).toUpperCase();
-//                String[] names=tmp.split(",");
-//                for(String name:names){
-//                    StockIndex stockIndex=new StockIndex();
-//                    stockIndex.setStockCode(stock);
-//                    stockIndex.setStockName(stockName);
-//                    stockIndex.setStockNameFirstLetter(name);
-//                    stockIndexMapper.insertSelective(stockIndex);
-//                    i++;
-//                }
-                /**
-                 * 单音字
-                 */
-                String stockNameFL=PinyinUtils.getAlpha(stockName);
-                StockIndex stockIndex=new StockIndex();
-                stockIndex.setStockCode(stock);
-                stockIndex.setStockName(stockName);
-                stockIndex.setStockNameFirstLetter(stockNameFL);
-                stockIndexMapper.insertSelective(stockIndex);
+                String stockNameFL=PinyinUtils.getAlpha2(stockName);
+                String[] names=stockNameFL.split(",");
+                for(String name:names){
+                    StockIndex stockIndex=new StockIndex();
+                    stockIndex.setStockCode(stock);
+                    stockIndex.setStockName(stockName);
+                    stockIndex.setStockNameFirstLetter(name);
+                    stockIndexMapper.insertSelective(stockIndex);
+                }
+                System.out.println(stockName+","+stockNameFL);
+
             }
         }
         return i;

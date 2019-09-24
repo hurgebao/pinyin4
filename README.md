@@ -6,7 +6,7 @@ PinyinUtils  单音
 1、建表语句  /sql/init.sql
 
 2、初始化股票名称索引表 curl localhost:8080/stockIndex/initAll
-多音字处理   长春  cc  zc
+多音字处理   长  重  波 传
 st股票处理
 
 
