@@ -48,7 +48,7 @@ public class StockIndexController {
 
     @GetMapping("/stockIndex/{stockPreLetter}")
     public List<Map<String,String>> l2(@PathVariable("stockPreLetter") String stockPreLetter){
-        logger.info("stockPreLetter=" + stockPreLetter);
+        logger.debug("stockPreLetter{}", stockPreLetter);
         Matcher numMatcher=NUM_PATTERN.matcher(stockPreLetter);
         Matcher charMatcher=CHAR_PATTERN.matcher(stockPreLetter);
 
@@ -62,7 +62,7 @@ public class StockIndexController {
         if(charMatcher.find()){
             list= stockIndexMapper.selectStockByPrefix(stockPreLetter);
         }
-        logger.debug("stockList",JSON.toJSONString(list));
+        logger.debug("stockList{}",JSON.toJSONString(list));
         return list;
     }
     @GetMapping("/stockIndex/initAll")
@@ -91,7 +91,7 @@ public class StockIndexController {
                     stockIndex.setStockNameFirstLetter(name);
                     stockIndexMapper.insertSelective(stockIndex);
                 }
-                System.out.println(stockName+","+stockNameFL);
+//                System.out.println(stockName+","+stockNameFL);
 
             }
         }
