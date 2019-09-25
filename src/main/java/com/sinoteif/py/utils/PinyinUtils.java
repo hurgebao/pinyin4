@@ -21,7 +21,7 @@ public class PinyinUtils {
     private static final Pattern DUOYINZI_PATTERN=Pattern.compile("长|重|波|传");
     private static final Set<Character> dset=new HashSet<Character>();
     static{
-//        dset.add('长');
+        dset.add('长');
         dset.add('重');
         dset.add('波');
 //        dset.add('传');
