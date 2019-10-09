@@ -24,6 +24,8 @@ public class PinyinUtils {
         dset.add('长');
         dset.add('重');
         dset.add('波');
+        dset.add('行');
+
 //        dset.add('传');
     }
     /**

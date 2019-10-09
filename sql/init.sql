@@ -1,5 +1,5 @@
-create database bcdb;
-use bcdb;
+create database stockdb;
+use stockdb;
 
 CREATE TABLE b_dict (
   id varchar(10) NOT NULL COMMENT '主键',
@@ -14,7 +14,7 @@ CREATE TABLE b_dict (
   UNIQUE KEY dict_type (dict_type,dict_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字典表';
 
-grant all on bcdb.* to bcuser IDENTITied by '!Q2w3e4r';
+grant all on stockdb.* to stockuser IDENTITFIED by '!Q2w3e4r';
 
 
 CREATE  TABLE stock_index(
