@@ -13,3 +13,5 @@ st股票处理
 3、获取股票首字母的股票列表
 curl  localhost:8080/stockIndex/wk
 curl  localhost:8080/stockIndex/000001
+
+http://47.95.204.52:8083/stock.html

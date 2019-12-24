@@ -35,11 +35,33 @@ public class StockIndexController {
         STOCK_EXCHANGE.put("600", "sh");
         STOCK_EXCHANGE.put("601", "sh");
         STOCK_EXCHANGE.put("603", "sh");
+        STOCK_EXCHANGE.put("510", "sh");
+        STOCK_EXCHANGE.put("511", "sh");
+        STOCK_EXCHANGE.put("512", "sh");
+        STOCK_EXCHANGE.put("513", "sh");
+        STOCK_EXCHANGE.put("514", "sh");
+        STOCK_EXCHANGE.put("515", "sh");
+        STOCK_EXCHANGE.put("516", "sh");
+        STOCK_EXCHANGE.put("517", "sh");
+        STOCK_EXCHANGE.put("518", "sh");
+        STOCK_EXCHANGE.put("519", "sh");
 
         STOCK_EXCHANGE.put("000", "sz");
         STOCK_EXCHANGE.put("001", "sz");
         STOCK_EXCHANGE.put("002", "sz");
         STOCK_EXCHANGE.put("300", "sz");
+        STOCK_EXCHANGE.put("150", "sz");
+        STOCK_EXCHANGE.put("151", "sz");
+        STOCK_EXCHANGE.put("152", "sz");
+        STOCK_EXCHANGE.put("153", "sz");
+        STOCK_EXCHANGE.put("154", "sz");
+        STOCK_EXCHANGE.put("155", "sz");
+        STOCK_EXCHANGE.put("156", "sz");
+        STOCK_EXCHANGE.put("157", "sz");
+        STOCK_EXCHANGE.put("158", "sz");
+        STOCK_EXCHANGE.put("159", "sz");
+
+
     }
     @Resource
     private RedisTemplate redisTemplate;
